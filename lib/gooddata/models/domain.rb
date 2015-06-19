@@ -227,7 +227,7 @@ module GoodData
               fields_to_check = opts[:fields_to_check] || user_data.keys
               diff = GoodData::Helpers.diff([domain_user.to_hash], [user_data], key: :login, fields: fields_to_check)
               next [] if diff[:changed].empty?
-              updated_user = domain.update_user(domain_user.to_hash.merge(user_data.compact), opts)
+              updated_user = domain.update_user(domain_user.to_hash.merge(user_data.reject {|_,v| v.nil?}), opts)
               [{ type: :user_changed_in_domain, user: updated_user }]
             end
           rescue RuntimeError => e
